@@ -1,10 +1,10 @@
 bl_info = {
     "name": "Blender to Clip Studio Link",
     "author": "X(twitter)@cblpan",
-    "version": (1, 2),
+    "version": (1, 3),
     "blender": (3, 0, 0),
     "location": "Image Editor > Sidebar > CSP Tab",
-    "description": "Send Texture and UV layout to Clip Studio Paint directly.",
+    "description": "Send Texture and UV layout to Clip Studio Paint directly with auto-sized UV.",
     "warning": "",
     "wiki_url": "",
     "category": "Image",
@@ -18,7 +18,6 @@ import subprocess
 class CSPLinkPreferences(bpy.types.AddonPreferences):
     bl_idname = __name__
 
-    # 사용자가 경로를 직접 선택할 수 있는 파일 탐색기 속성
     csp_path: bpy.props.StringProperty(
         name="Clip Studio Path",
         subtype='FILE_PATH',
@@ -38,8 +37,15 @@ class IMAGE_OT_OpenInCSP(bpy.types.Operator):
     bl_label = "Open Texture & UV"
     
     def execute(self, context):
-        # 환경 설정에서 사용자가 지정한 경로 가져오기
-        preferences = context.preferences.addons[__package__].preferences
+        # 애드온 이름 찾기
+        addon_name = __package__ if __package__ else __name__.partition('.')[0]
+        
+        try:
+            preferences = context.preferences.addons[addon_name].preferences
+        except KeyError:
+            self.report({'ERROR'}, "Add-on not found. Please Install the file properly.")
+            return {'CANCELLED'}
+
         csp_exec_path = preferences.csp_path
 
         # 경로 유효성 검사
@@ -58,6 +64,9 @@ class IMAGE_OT_OpenInCSP(bpy.types.Operator):
             self.report({'ERROR'}, "Save the image file first.")
             return {'CANCELLED'}
 
+        # [수정됨] 이미지의 현재 해상도 가져오기 (가로, 세로)
+        img_width, img_height = img.size
+
         # UV 맵 내보내기 로직
         obj = context.active_object
         uv_path = ""
@@ -68,29 +77,27 @@ class IMAGE_OT_OpenInCSP(bpy.types.Operator):
             uv_filename = f"{file_name}_UV.png"
             uv_path = os.path.join(base_dir, uv_filename)
             
-            # 현재 모드 저장 및 에딧 모드 전환
             prev_mode = obj.mode
             bpy.ops.object.mode_set(mode='EDIT')
             bpy.ops.mesh.select_all(action='SELECT')
             
             try:
-                # UV 내보내기 (2048px, 투명도 0.25)
-                bpy.ops.uv.export_layout(filepath=uv_path, size=(2048, 2048), opacity=0.25)
+                # [수정됨] 고정 사이즈(2048) 대신 이미지의 실제 사이즈(img_width, img_height) 적용
+                bpy.ops.uv.export_layout(filepath=uv_path, size=(img_width, img_height), opacity=0.25)
             except Exception as e:
                 self.report({'WARNING'}, f"UV Export Failed: {e}")
                 uv_path = ""
             
-            # 원래 모드로 복귀
             bpy.ops.object.mode_set(mode=prev_mode)
 
-        # 실행 (경로 + 이미지 + UV)
+        # 실행 (Clip Studio Paint 열기)
         try:
             file_list = [csp_exec_path, filepath]
             if uv_path and os.path.exists(uv_path):
                 file_list.append(uv_path)
                 
             subprocess.Popen(file_list)
-            self.report({'INFO'}, f"Sent to Clip Studio!")
+            self.report({'INFO'}, f"Sent to Clip Studio! (Size: {img_width}x{img_height})")
         except Exception as e:
             self.report({'ERROR'}, f"Execution Failed: {str(e)}")
             return {'CANCELLED'}
@@ -108,6 +115,7 @@ class IMAGE_PT_CSPPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         col = layout.column(align=True)
+        # UI 버튼 이름과 실제 기능 연결
         col.operator("image.open_in_csp", icon='BRUSH_DATA', text="Open in CSP")
         col.operator("image.reload", icon='FILE_REFRESH', text="Reload Image")
 
