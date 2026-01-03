@@ -1,30 +1,31 @@
-# b3d2csp: Blender to Clip Studio Paint Bridge
+# Blender to Clip Studio Link (CSP Link)
 
-**b3d2csp** is a Blender add-on that seamlessly connects **Blender** and **Clip Studio Paint (CSP)**. 
-With a single click, you can open your texture and UV layout in Clip Studio Paint, edit them, and reload them in Blender.
+블렌더(Blender)에서 작업 중인 텍스처와 UV 레이아웃을 클릭 한 번으로 클립스튜디오(Clip Studio Paint)로 내보내 열어주는 애드온입니다.
 
-블렌더의 텍스처와 UV 맵을 클릭 한 번으로 클립 스튜디오로 내보내는 애드온입니다.
+## ✨ 주요 기능 (Features)
+* **원클릭 전송:** 현재 Blender Image Editor에 열려있는 텍스처 이미지를 클립스튜디오에서 엽니다.
+* **자동 UV 매칭:** 현재 선택된 오브젝트의 UV 레이아웃을 **텍스처 이미지와 동일한 해상도**로 자동 추출하여 함께 엽니다. (별도의 사이즈 설정이 필요 없습니다.)
+* **빠른 새로고침:** 클립스튜디오에서 저장한 뒤, 블렌더에서 `Reload Image` 버튼을 누르면 즉시 반영됩니다.
 
-## ✨ Features
-* **Texture Sync:** Open the current image from Blender directly in Clip Studio Paint.
-* **Smart UV Export:** Automatically exports the UV layout as a transparent PNG and opens it alongside your texture.
-* **Instant Reload:** Reload modified textures in Blender with a single button.
-* **Configurable:** Set your own path to `ClipStudioPaint.exe` in the preferences.
+## 📥 설치 방법 (Installation)
+1. `b3d2csp.py` 파일을 다운로드합니다.
+2. Blender를 실행하고 `Edit` > `Preferences` > `Add-ons`로 이동합니다.
+3. `Install...` 버튼을 누르고 다운로드한 파일을 선택합니다.
+4. 검색창에 "Blender to Clip Studio Link"를 검색하고 체크박스를 켜서 활성화합니다.
+5. **[중요]** 애드온 설정(Preferences)에서 본인의 `ClipStudioPaint.exe` 파일 경로를 지정해주세요.
 
-## 📦 Installation
-1. Download **`b3d2csp.py`** from this repository.
-2. In Blender, go to **Edit > Preferences > Add-ons**.
-3. Click **Install...** and select `b3d2csp.py`.
-4. Enable the add-on **"Image: Blender to Clip Studio Link"**.
-5. **(Essential)** Expand the preferences panel of the add-on and set the path to your **ClipStudioPaint.exe**.
+## 🚀 사용 방법 (Usage)
+1. **블렌더 준비:** `Image Editor` 창을 열고, 편집할 이미지를 선택합니다. (이미지는 반드시 컴퓨터에 저장된 상태여야 합니다.)
+2. **사이드바 열기:** `Image Editor`에서 키보드 `N`을 눌러 사이드바를 열고 `CSP` 탭을 클릭합니다.
+3. **Open in CSP 버튼 클릭:**
+    * 현재 이미지와 UV 맵이 클립스튜디오에서 자동으로 열립니다.
+    * *참고: UV 맵은 투명도 25%의 PNG 파일로 생성되어 레이어 맨 위에 얹어집니다.*
+4. **작업 및 저장:** 클립스튜디오에서 그림을 그리고 `Ctrl + S`로 저장합니다.
+5. **블렌더 반영:** 블렌더로 돌아와 `Reload Image` 버튼을 누르면 작업물이 모델에 적용됩니다.
 
-## 🚀 How to use
-1. Open **Image Editor** in Blender.
-2. Load an image (save it to disk first) and select your 3D object.
-3. Press `N` to open the sidebar, then click the **CSP** tab.
-4. Click **"Open Texture & UV"**.
-5. Edit in Clip Studio Paint, save (Ctrl+S).
-6. Back in Blender, click **"Reload Image"**.
+## ⚠️ 주의사항 (Important Notes)
+* **이미지 비율(Aspect Ratio):** 이 애드온은 현재 이미지의 가로/세로 사이즈에 맞춰 UV 맵을 생성합니다. 만약 클립스튜디오 내에서 캔버스 크기를 임의로 변경할 경우(예: 1024px → 2048px), **가로세로 비율(종횡비)은 반드시 유지**해야 UV가 어긋나지 않습니다.
+* **파일 저장 필수:** 블렌더에서 생성만 하고 저장하지 않은(Unsaved) 이미지는 전송할 수 없습니다. 반드시 먼저 저장해주세요.
 
 ## 📜 License
 **Copyright (c) 2026 cblpan**
@@ -36,7 +37,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 This add-on was developed with the assistance of **Google Gemini**.
 (이 애드온은 구글 제미나이의 도움을 받아 개발되었습니다.)
 ![Generic badge](https://img.shields.io/badge/AI-Assisted-green.svg)
-
 ![Gemini badge](https://img.shields.io/badge/Co--coded%20with-Gemini-blue)
 
 ## 📮 Feedback & Support
