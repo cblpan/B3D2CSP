@@ -36,4 +36,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 This add-on was developed with the assistance of **Google Gemini**.
 (이 애드온은 구글 제미나이의 도움을 받아 개발되었습니다.)
 ![Generic badge](https://img.shields.io/badge/AI-Assisted-green.svg)
+
 ![Gemini badge](https://img.shields.io/badge/Co--coded%20with-Gemini-blue)
+
+## 📮 Feedback & Support
+If you encounter any bugs or have feature requests, please open an issue on the **Issues** tab.
+(버그나 제안 사항이 있다면 Issues 탭에 남겨주세요.)
+
+> [Click here to open a new issue](../../issues)
